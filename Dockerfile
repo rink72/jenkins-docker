@@ -1,4 +1,11 @@
 FROM jenkins/jenkins:lts
 
-RUN curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh && chmod +x /usr/bin/docker
+USER root
+RUN apt-get update \
+      && apt-get install -y sudo \
+      && rm -rf /var/lib/apt/lists/*
+RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+RUN curl -sSL get.docker.com | sh && usermod -aG docker jenkins
+
 
